@@ -346,7 +346,7 @@ This node has one function:
 Pseudocode
 ------------------------
 
-###  ###
+### MODE1 ###
 
 ```pseudocode
 float RobotDistance(min, max, dist_obs[]){
@@ -372,19 +372,127 @@ int main (){
 }
 ```
 
+### MODE2 ###
+
+```pseudocode
+bool SwitchModeCallback(req, res){
+    active mode 2 from UI_node
+}
+
+Define movement keys
+Define speed keys
+Define the reminder message
+
+int getch(){
+    wait and get user input
+}
+
+int main(){
+    initializing MODE2_node and the NodeHandle
+    definition of service, subscriber and publisher
+    
+    while ros is ok{
+    if the mode 2 is not actived
+        continue
+    else
+        get the pressed input
+        if the input corresponds to a key in the movement key
+            grab the direction data
+        else if the input corresponds to a key in the speed key
+            grab the speed data
+        else
+            stop the robot
+            if ctrl-c is typed
+                terminate the program
+  }
+}
+```
+
+### MODE3 ###
+
+```pseudocode
+bool SwitchModeCallback(req, res){
+    active mode 3 from UI_node
+}
+
+Define movement keys
+Define speed keys
+Define the reminder message
+
+int getch(){
+    wait and get user input
+}
+
+float RobotDistance(min, max, dist_obs[]){
+  calculate the minimum distance from an obstacle in a range of 720 elements
+  return the distant value
+}
+
+void LaserCallback(scan){
+  calculate the min distance of the robot from the wall in the right, front-right,front, front-left and left position with the function RobotDistance
+
+  if there is obstacles in the front of the robot
+    turn the robot on the left
+  else if there is obstacles in front of the robot right
+    turn the robot on the left
+  else if there is obstacles in front of the robot left
+    turn the robot on the right
+  else if there is obstacles in the front and in front of the robot right
+    turn the robot on the left
+  else if there is obstacles in the front and in front of the robot left
+    turn the robot on the right
+  else if there is obstacles in the front and in front of the robot right and left
+    turn the robot on the left
+  else if there is obstacles in front of the robot right and left
+    go straight
+  else
+    go the robot forward
+}
+
+int main(){
+    initializing MODE3_node and the NodeHandle
+    definition of service and publisher
+    
+    while ros is ok{
+    if the mode 3 is not actived
+        continue
+    else
+        get the pressed input
+        if the input corresponds to a key in the movement key
+            grab the direction data
+        else if the input corresponds to a key in the speed key
+            grab the speed data
+        else
+            stop the robot
+            if ctrl-c is typed
+                terminate the program
+  }
+}
+```
+
 ### UI_node ###
 
 ```pseudocode
-char Input(){
-  print a character request message and return the character given in input by the user
-}  
-
-void ScanCallback(msg){
-  send the request to change the velocity and reset the position
+int MODE(){
+  print a integer request message and return the integer given in input by the user
 }
 
 int main (){
-  initializing ui_node and the NodeHandle
-  definition of client and subscriber
+  initializing UI_node and the NodeHandle
+  definition of client
+  
+  while ros is ok{
+    if the user chose mode 1
+        calls the server /switch_mode1 to execute the algorith
+    else if the user chose mode 2
+        calls the server /switch_mode2 to execute the algorith
+    else if the user chose mode 3
+        calls the server /switch_mode3 to execute the algorith
+    else if ctrl-c is typed
+        terminate the program
+    else
+        print "ERROR!"
+  }
+  
 } 
 ```
