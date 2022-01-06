@@ -239,7 +239,7 @@ This node has 2 functions:
     
 When the node is activated, a message is printed on the screen indicating which commands are to be used to move the robot.
 
-`
+```
 Reading from the keyboard and Publishing to Twist!
   ---------------------------
   Moving around:
@@ -258,7 +258,7 @@ Reading from the keyboard and Publishing to Twist!
   w/x : increase/decrease only linear speed by 10%
   e/c : increase/decrease only angular speed by 10%
   CTRL-C to quit
-`
+```
 
 The commands for moving the robot are as follows:
 
