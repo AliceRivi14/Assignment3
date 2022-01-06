@@ -229,6 +229,7 @@ Publisher:
 * `cmd_vel (geometry_msgs/Twist)`: a stream of velocity commands meant for execution by a mobile base.
 
 This node has 2 functions:
+
 * `bool SwitchModeCallback(std_srvs::SetBool::Request& req,std_srvs::SetBool::Response& res)`:
 
     activates the node when the `std_srvs/SetBool` service is called.
@@ -281,6 +282,51 @@ The commands for moving the robot are as follows:
 `.` to turn right going backwards
 
 The other commands described in the message can be used to change the speed of the robot.
+
+
+### MODE3 node ###
+
+This node represents the third mode that the user can choose. Through this code the user can guide the robot through the environment using the keyboard and is helped to avoid collisions with obstacles.
+
+Also in this case in order to be able to move the robot via the keyboard, it may be useful to exploit the keyboard teleop program. The code of the `teleop_twist_keyboard.cpp` node has been copied into the MODE3 node and adapted to the needs of the project.
+
+Publisher:
+* `cmd_vel (geometry_msgs/Twist)`: a stream of velocity commands meant for execution by a mobile base.
+
+Subscriber:
+* `scan (sensor_msgs/LaserScan)`: laser scans to create the map.
+
+This node has four functions:
+
+* `bool SwitchModeCallback(std_srvs::SetBool::Request& req,std_srvs::SetBool::Response& res)`:
+
+    activates the node when the `std_srvs/SetBool` service is called.
+    
+* `int getch(void)`:
+
+    manages user-generated keyboard inputs by preventing them from blocking.
+    
+* `float RobotDistance(int min, int max, float dist_obs[])` in which:
+
+     `min`: minimum index of the subsection of the array that we want to analyze.
+
+    `max`: maximum index of the subsection of the array that we want to analyze.
+
+    `dist_obs[]`: array wich contains 720 elements wich are the distance of the obstacles from the robot.
+
+    `dist_value`: minimun distance from an obstacle in the subsection of the array.
+
+    It is possible to use the ranges vector to see robot distance from the wall.
+    
+* `void LaserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)`:
+
+    is called when a message is posted on the /scan topic.
+
+    The robot can see with a field of 180° in front of him and this field (in radiants) is divided in 720 section.
+
+    With this function the velocity is published on the /cmd_vel topic and with the control algorithm it possible to determine the evolution of the robot based on the distance.
+    
+When the node is activated, the same message as for the MODE2 node is printed on the screen indicating which commands are to be used to move the robot.
 
 
 ### UI node ###
