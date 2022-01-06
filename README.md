@@ -164,7 +164,7 @@ This node has 10 functions:
 
 * `bool SwitchModeCallback(std_srvs::SetBool::Request& req,std_srvs::SetBool::Response& res)`
 
-    activates the node when the server is called
+    activates the node when the `std_srvs/SetBool` service is called.
     
 * `void OdometryCallback(const nav_msgs::Odometry::ConstPtr& msg)`
 
@@ -219,7 +219,61 @@ This node has 10 functions:
     The robot can see with a field of 180° in front of him and this field (in radiants) is divided in 720 section.
     
     
-### MODE ###
+### MODE2 node ###
+
+This node represents the second mode that the user can choose. Through this code the user can guide the robot within the environment using the keyboard.
+
+In order to be able to move the robot via the keyboard, it may be useful to exploit the keyboard teleop program. The code of the `teleop_twist_keyboard.cpp` node has been copied into the MODE2 node and adapted to the needs of the project.
+
+Publisher:
+* `cmd_vel (geometry_msgs/Twist)`: a stream of velocity commands meant for execution by a mobile base.
+
+This node has 2 functions:
+* `bool SwitchModeCallback(std_srvs::SetBool::Request& req,std_srvs::SetBool::Response& res)`
+
+    activates the node when the `std_srvs/SetBool` service is called.
+    
+* `int getch(void)`
+
+    manages user-generated keyboard inputs by preventing them from blocking.
+    
+When the node is activated, a message is printed on the screen indicating which commands are to be used to move the robot.
+
+```bashscript
+Reading from the keyboard and Publishing to Twist!
+  ---------------------------
+  Moving around:
+     u    i    o
+     j    k    l
+     m    ,    .
+  For Holonomic mode (strafing), hold down the shift key:
+  ---------------------------
+     U    I    O
+     J    K    L
+     M    <    >
+  t : up (+z)
+  b : down (-z)
+  anything else : stop
+  q/z : increase/decrease max speeds by 10%
+  w/x : increase/decrease only linear speed by 10%
+  e/c : increase/decrease only angular speed by 10%
+  CTRL-C to quit
+```
+
+The commands for moving the robot are as follows:
+
+`u` to turn left
+`i` to go straight ahead
+`o` to turn right
+`j` to turn counterclockwise
+`k` to stop
+`l` to turn clockwise
+`m` to turn left going backwards
+`,` to go straight back
+`.` to turn right going backwards
+
+The other commands described in the message can be used to change the speed of the robot.
+
 
 ### UI node ###
 
