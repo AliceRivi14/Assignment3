@@ -162,11 +162,11 @@ Publisher:
 
 This node has 10 functions:
 
-* `bool SwitchModeCallback(std_srvs::SetBool::Request& req,std_srvs::SetBool::Response& res)`
+* `bool SwitchModeCallback(std_srvs::SetBool::Request& req,std_srvs::SetBool::Response& res)`:
 
     activates the node when the `std_srvs/SetBool` service is called.
     
-* `void OdometryCallback(const nav_msgs::Odometry::ConstPtr& msg)`
+* `void OdometryCallback(const nav_msgs::Odometry::ConstPtr& msg)`:
 
     is called when a message is posted on the `/odom` topic.
     
@@ -174,23 +174,23 @@ This node has 10 functions:
     
     The `tf` software library is responsible for managing the relationships between coordinate frames relevant to the robot in a transform tree.
     
-* `void ChangeState(int state)`
+* `void ChangeState(int state)`:
 
     changes the machine state. There are three states representing the behaviour or the situation in which the robot finds itself
    
-* `float NormalizeAngle(float angle)`
+* `float NormalizeAngle(float angle)`:
 
     normalises the angle and allows calculation of the directional error with respect to the desired position
     
-* `void FixYaw(float des_pos_x, float des_pos_y)`
+* `void FixYaw(float des_pos_x, float des_pos_y)`:
 
     represents state 0, when the robot has to correct its direction angle to the desired position. If the directional error is less than +/- 2 degrees, the robot changes its state.
     
-* `void GoForward(float des_pos_x, float des_pos_y)`
+* `void GoForward(float des_pos_x, float des_pos_y)`:
 
     represents state 1 of the robot, when the robot is facing the right direction, but away from the desired position. If the position error is less than 0.3, or the direction error is greater than +/- 20 degrees, the robot changes its state.
     
-* `void Position()`
+* `void Position()`:
 
     represents state 2, when the robot reaches the desired position and stops.
     
@@ -206,7 +206,7 @@ This node has 10 functions:
 
     It is possible to use the ranges vector to see robot distance from the wall.
 
-* `void ControlAlgorithm()`
+* `void ControlAlgorithm()`:
 
     determines the evolution of the robot based on the distance to obstacles and changes its status according to the position of the robot relative to the desired position.
     
@@ -229,17 +229,17 @@ Publisher:
 * `cmd_vel (geometry_msgs/Twist)`: a stream of velocity commands meant for execution by a mobile base.
 
 This node has 2 functions:
-* `bool SwitchModeCallback(std_srvs::SetBool::Request& req,std_srvs::SetBool::Response& res)`
+* `bool SwitchModeCallback(std_srvs::SetBool::Request& req,std_srvs::SetBool::Response& res)`:
 
     activates the node when the `std_srvs/SetBool` service is called.
     
-* `int getch(void)`
+* `int getch(void)`:
 
     manages user-generated keyboard inputs by preventing them from blocking.
     
 When the node is activated, a message is printed on the screen indicating which commands are to be used to move the robot.
 
-```bashscript
+`
 Reading from the keyboard and Publishing to Twist!
   ---------------------------
   Moving around:
@@ -258,18 +258,26 @@ Reading from the keyboard and Publishing to Twist!
   w/x : increase/decrease only linear speed by 10%
   e/c : increase/decrease only angular speed by 10%
   CTRL-C to quit
-```
+`
 
 The commands for moving the robot are as follows:
 
 `u` to turn left
+
 `i` to go straight ahead
+
 `o` to turn right
+
 `j` to turn counterclockwise
+
 `k` to stop
+
 `l` to turn clockwise
+
 `m` to turn left going backwards
+
 `,` to go straight back
+
 `.` to turn right going backwards
 
 The other commands described in the message can be used to change the speed of the robot.
