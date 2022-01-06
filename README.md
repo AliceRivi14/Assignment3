@@ -98,6 +98,7 @@ Server:
 * `dynamic_map (nav_msgs/GetMap)`: call this service to get the map data.
 
 Parameters:
+
 The values of these parameters are set according to this project.
 (To verify the default parameters, please refer to the website http://wiki.ros.org/gmapping)
 
@@ -147,14 +148,19 @@ Publisher:
 
 ### MODE1 node ###
 
+This node represents the first mode that the user can choose. Through this code the user is asked what is the (x,y) position he wants the robot to reach. Once the coordinates have been selected, the robot is guided to the desired position, avoiding obstacles.
+
+If the position is not reached within a certain time, the assignment is cancelled.
+
 Subscriber:
 * `scan (sensor_msgs/LaserScan)`: laser scans to create the map.
+* `odom (nav_msgs/Odometry)`: odometry data from the position model.
 
 Publisher:
 * `cmd_vel (geometry_msgs/Twist)`: a stream of velocity commands meant for execution by a mobile base.
 * `move_base/goal (move_base_msgs/MoveBaseActionGoal)`: a goal for move_base to pursue in the world.
 
-This node has ?? functions:
+This node has 10 functions:
 
 * `bool SwitchModeCallback(std_srvs::SetBool::Request& req,std_srvs::SetBool::Response& res)`
 
@@ -213,7 +219,7 @@ This node has ?? functions:
     The robot can see with a field of 180° in front of him and this field (in radiants) is divided in 720 section.
     
     
-
+### MODE ###
 
 ### UI node ###
 
