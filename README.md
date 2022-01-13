@@ -150,73 +150,14 @@ Publisher:
 
 This node represents the first mode that the user can choose. Through this code the user is asked what is the (x,y) position he wants the robot to reach. Once the coordinates have been selected, the robot is guided to the desired position, avoiding obstacles.
 
-If the position is not reached within a certain time, the assignment is cancelled.
+If the position is not reached within a certain time, the goal is cancelled.
 
-Subscriber:
-* `scan (sensor_msgs/LaserScan)`: laser scans to create the map.
-* `odom (nav_msgs/Odometry)`: odometry data from the position model.
-
-Publisher:
-* `cmd_vel (geometry_msgs/Twist)`: a stream of velocity commands meant for execution by a mobile base.
-* `move_base/goal (move_base_msgs/MoveBaseActionGoal)`: a goal for move_base to pursue in the world.
-
-This node has 10 functions:
+This node has one function:
 
 * `bool SwitchModeCallback(std_srvs::SetBool::Request& req,std_srvs::SetBool::Response& res)`:
 
     activates the node when the `std_srvs/SetBool` service is called.
     
-* `void OdometryCallback(const nav_msgs::Odometry::ConstPtr& msg)`:
-
-    is called when a message is posted on the `/odom` topic.
-    
-    The pose in this message corresponds to the estimated position of the robot in the odometric frame along with an optional covariance for the certainty of that pose estimate.
-    
-    The `tf` software library is responsible for managing the relationships between coordinate frames relevant to the robot in a transform tree.
-    
-* `void ChangeState(int state)`:
-
-    changes the machine state. There are three states representing the behaviour or the situation in which the robot finds itself
-   
-* `float NormalizeAngle(float angle)`:
-
-    normalises the angle and allows calculation of the directional error with respect to the desired position
-    
-* `void FixYaw(float des_pos_x, float des_pos_y)`:
-
-    represents state 0, when the robot has to correct its direction angle to the desired position. If the directional error is less than +/- 2 degrees, the robot changes its state.
-    
-* `void GoForward(float des_pos_x, float des_pos_y)`:
-
-    represents state 1 of the robot, when the robot is facing the right direction, but away from the desired position. If the position error is less than 0.3, or the direction error is greater than +/- 20 degrees, the robot changes its state.
-    
-* `void Position()`:
-
-    represents state 2, when the robot reaches the desired position and stops.
-    
-* `float RobotDistance(int min, int max, float dist_obs[])` in which:
-
-     `min`: minimum index of the subsection of the array that we want to analyze.
-
-    `max`: maximum index of the subsection of the array that we want to analyze.
-
-    `dist_obs[]`: array wich contains 720 elements wich are the distance of the obstacles from the robot.
-
-    `dist_value`: minimun distance from an obstacle in the subsection of the array.
-
-    It is possible to use the ranges vector to see robot distance from the wall.
-
-* `void ControlAlgorithm()`:
-
-    determines the evolution of the robot based on the distance to obstacles and changes its status according to the position of the robot relative to the desired position.
-    
-    With this function the robot's speed and position are published on the `/cmd_vel` and `/move_base/goal` topics respectively.
-    
-* `void LaserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)`:
-
-    is called when a message is posted on the `/scan` topic. 
-
-    The robot can see with a field of 180° in front of him and this field (in radiants) is divided in 720 section.
     
     
 ### MODE2 node ###
