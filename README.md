@@ -448,3 +448,15 @@ int main (){
         
 } 
 ```
+
+
+Possible improvements
+----------------------
+
+Although the project works quite well, I think some improvements could be made:
+
+* The user is asked to wait 30 seconds before setting a new goal. You could ask the user to set the next goal while waiting and implement an array in which to collect the goals so that they are reached sequentially.
+
+* A set of points representing the limit of the area in which the robot can move could be set, so that if unreachable positions are entered the user is informed immediately.
+
+* When a goal is set, the robot moves forward and determines the path to reach it. The vision range of the robot could be extended so that if the goal is behind the robot, the robot can turn around and reach the position.
