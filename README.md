@@ -62,7 +62,7 @@ The move_base.launch file allows:
 ### Assignment ###
 
 The assignment.launch file allows:
-* Launch the ?? node
+* Launch the UI, MODE1, MODE2 and MODE3 nodes
 
 
 Nodes
@@ -150,14 +150,7 @@ Publisher:
 
 This node represents the first mode that the user can choose. Through this code the user is asked what is the (x,y) position he wants the robot to reach. Once the coordinates have been selected, the robot is guided to the desired position, avoiding obstacles.
 
-If the position is not reached within a certain time, the goal is cancelled.
-
-This node has one function:
-
-* `bool SwitchModeCallback(std_srvs::SetBool::Request& req,std_srvs::SetBool::Response& res)`:
-
-    activates the node when the `std_srvs/SetBool` service is called.
-    
+If the position is not reached within a certain time (30 sec), the goal is cancelled.
     
     
 ### MODE2 node ###
@@ -170,14 +163,14 @@ Publisher:
 * `cmd_vel (geometry_msgs/Twist)`: a stream of velocity commands meant for execution by a mobile base.
 
 This node has 2 functions:
-
-* `bool SwitchModeCallback(std_srvs::SetBool::Request& req,std_srvs::SetBool::Response& res)`:
-
-    activates the node when the `std_srvs/SetBool` service is called.
     
 * `int getch(void)`:
 
     manages user-generated keyboard inputs by preventing them from blocking.
+    
+* `void Teleop()`:
+    
+    allows the robot to move according to commands given by the user.
     
 When the node is activated, a message is printed on the screen indicating which commands are to be used to move the robot.
 
@@ -237,11 +230,7 @@ Publisher:
 Subscriber:
 * `scan (sensor_msgs/LaserScan)`: laser scans to create the map.
 
-This node has four functions:
-
-* `bool SwitchModeCallback(std_srvs::SetBool::Request& req,std_srvs::SetBool::Response& res)`:
-
-    activates the node when the `std_srvs/SetBool` service is called.
+This node has 4 functions:
     
 * `int getch(void)`:
 
@@ -267,6 +256,10 @@ This node has four functions:
 
     With this function the velocity is published on the /cmd_vel topic and with the control algorithm it possible to determine the evolution of the robot based on the distance.
     
+* `void Teleop()`:
+    
+    allows the robot to move according to commands given by the user.  
+    
 When the node is activated, the same message as for the MODE2 node is printed on the screen indicating which commands are to be used to move the robot.
 
 
@@ -290,52 +283,46 @@ Pseudocode
 ### MODE1 ###
 
 ```pseudocode
-float RobotDistance(min, max, dist_obs[]){
-  calculate the minimum distance from an obstacle in a range of 720 elements
-  return the distant value
-}  
-
-
-void LaserCallback(scan){
-  calculate the min distance of the robot from the wall in the left, right and front position with the function RobotDistance
-
-  if there is obstacles in the front of the robot
-     if robot is closer to the obstacles to the left
-        turn the robot on the right
-     else if the robot is closer to the obstacles to the right
-        turn the robot on the left
-  else go the robot forward
-}
-
 int main (){
-  initializing control_node and the NodeHandle
-  definition of service, publisher and subscriber
+  initializing MODE1_node and the NodeHandle
+  definition of actionclient
+  
+  while ros is ok
+      active Mode 1
+      if Mode 1 is actived
+        print a two floats request message and return the floats given in input by the user
+        if user type 00 00
+            returt to the user interface
+        else
+            set and send the goal
+
+        if the position is reached before 30 sec
+            print "Position reached before the timeout"
+        else
+            print "Position not reached before timeout"
+            cancel goal
+      else
+        continue
+        
 }
 ```
 
 ### MODE2 ###
 
 ```pseudocode
-bool SwitchModeCallback(req, res){
-    active mode 2 from UI_node
-}
-
 Define movement keys
 Define speed keys
 Define the reminder message
 
 int getch(){
     wait and get user input
+    prevent input blocking
 }
 
-int main(){
-    initializing MODE2_node and the NodeHandle
-    definition of service, subscriber and publisher
+void Teleop(){
+    print the reminder message
     
-    while ros is ok{
-    if the mode 2 is not actived
-        continue
-    else
+    while true
         get the pressed input
         if the input corresponds to a key in the movement key
             grab the direction data
@@ -344,18 +331,30 @@ int main(){
         else
             stop the robot
             if ctrl-c is typed
-                terminate the program
-  }
+                return to the user interface
+                
+        set the velocity        
+                
+        publish the velocity message on /cmd_vel topic
+}  
+
+int main(){
+    initializing MODE2_node and the NodeHandle
+    definition of publisher
+    
+    while ros is ok
+        active Mode 2
+        if the Mode 2 is actived
+            move the robot
+        else
+            continue
+            
 }
 ```
 
 ### MODE3 ###
 
 ```pseudocode
-bool SwitchModeCallback(req, res){
-    active mode 3 from UI_node
-}
-
 Define movement keys
 Define speed keys
 Define the reminder message
@@ -374,30 +373,20 @@ void LaserCallback(scan){
 
   if there is obstacles in the front of the robot
     turn the robot on the left
-  else if there is obstacles in front of the robot right
+  else if there is obstacles in front and right of the robot
     turn the robot on the left
-  else if there is obstacles in front of the robot left
+  else if there is obstacles in front and left of the robot
     turn the robot on the right
-  else if there is obstacles in the front and in front of the robot right
-    turn the robot on the left
-  else if there is obstacles in the front and in front of the robot left
-    turn the robot on the right
-  else if there is obstacles in the front and in front of the robot right and left
-    turn the robot on the left
-  else if there is obstacles in front of the robot right and left
-    go straight
   else
     go the robot forward
+    
+  publish the velocity message on /cmd_vel topic
 }
 
-int main(){
-    initializing MODE3_node and the NodeHandle
-    definition of service and publisher
+void Teleop(){
+    print the reminder message
     
-    while ros is ok{
-    if the mode 3 is not actived
-        continue
-    else
+    while true
         get the pressed input
         if the input corresponds to a key in the movement key
             grab the direction data
@@ -406,8 +395,24 @@ int main(){
         else
             stop the robot
             if ctrl-c is typed
-                terminate the program
-  }
+                return to the user interface
+                
+        set the velocity
+                
+        publish the velocity message on /cmd_vel topic
+} 
+
+int main(){
+    initializing MODE3_node and the NodeHandle
+    definition of subscriber and publisher
+    
+    while ros is ok
+        active Mode 3
+        if the Mode 3 is actived
+            move the robot
+        else
+            continue
+     
 }
 ```
 
@@ -416,24 +421,26 @@ int main(){
 ```pseudocode
 int MODE(){
   print a integer request message and return the integer given in input by the user
+  
+  if the input is 1
+    execute mode 1
+  else if the input is 2
+    execute mode 2
+  else if the input is 3
+    execute mode 3
+   else
+    pint "ERROR!"
 }
 
 int main (){
   initializing UI_node and the NodeHandle
-  definition of client
   
-  while ros is ok{
-    if the user chose mode 1
-        calls the server /switch_mode1 to execute the algorith
-    else if the user chose mode 2
-        calls the server /switch_mode2 to execute the algorith
-    else if the user chose mode 3
-        calls the server /switch_mode3 to execute the algorith
-    else if ctrl-c is typed
-        terminate the program
-    else
-        print "ERROR!"
-  }
-  
+  while ros is ok
+    active Mode 0 (user interface)
+    if Mode 0 is actived
+        chose the mode to control the robot
+    else 
+        continue
+        
 } 
 ```
