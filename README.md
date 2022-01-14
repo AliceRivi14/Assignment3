@@ -17,6 +17,7 @@ Installing and running
 In a terminale type the following commands:
 ```bashscript
 $ sudo apt-get install ros-<your_ros_distro>-navigation
+$ sudo apt-get install ros-<your_ros_distro>-teleop-twist-keyboard
 $ mkdir -p ROS_ws/src
 $ cd ROS_ws/src
 $ git clone https://github.com/CarmineD8/slam_gmapping.git
@@ -33,6 +34,11 @@ $ roslaunch final_assignment simulation_gmapping
 ```bashscript
 $ roslaunch final_assignment move_base
 ```
+
+Make sure the Rviz interface looks like the following:
+
+![Screenshot from 2022-01-14 12-00-35](https://user-images.githubusercontent.com/92019811/149586465-a418ae18-c543-4433-b47c-721677244ab7.png)
+
 
 To run the node for this project, open another terminal and type:
 ```bashscript
@@ -94,9 +100,6 @@ Publisher:
 * `map (nav_msgs/OccupancyGrid)`: get the map data from this topic, which is latched, and updated periodically.
 * `~entropy (std_msgs/Float64)`: estimate of the entropy of the distribution over the robot's pose (a higher value indicates greater uncertainty). New in 1.1.0.
 
-Server:
-* `dynamic_map (nav_msgs/GetMap)`: call this service to get the map data.
-
 Parameters:
 
 The values of these parameters are set according to this project.
@@ -150,7 +153,8 @@ Publisher:
 
 This node represents the first mode that the user can choose. Through this code the user is asked what is the (x,y) position he wants the robot to reach. Once the coordinates have been selected, the robot is guided to the desired position, avoiding obstacles.
 
-If the position is not reached within a certain time (30 sec), the goal is cancelled.
+This node provides an implementation of an action which, given a position goal, will attempt to reach it.
+If the position is not reached within a certain time (30 seconds), the goal is cancelled.
     
     
 ### MODE2 node ###
