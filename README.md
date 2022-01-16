@@ -14,7 +14,7 @@ The architecture is able to get the user request, and let the robot execute one 
 Installing and running
 ----------------------
 
-In a terminale type the following commands:
+In a terminal type the following commands:
 ```bashscript
 $ sudo apt-get install ros-<your_ros_distro>-navigation
 $ sudo apt-get install ros-<your_ros_distro>-teleop-twist-keyboard
@@ -274,7 +274,7 @@ The UI node represents the project’s user interface. This node constantly wait
 
 This node has one function:
 
-* `int MODE()`:
+* `bool MODE()`:
 
     print a integer request message and return the integer given in input by the user.
     
@@ -376,7 +376,7 @@ void LaserCallback(scan){
   calculate the min distance of the robot from the wall in the right, front-right,front, front-left and left position with the function RobotDistance
 
   if there is obstacles in the front of the robot
-    turn the robot on the left
+    stop the robot
   else if there is obstacles in front and right of the robot
     turn the robot on the left
   else if there is obstacles in front and left of the robot
@@ -423,7 +423,7 @@ int main(){
 ### UI_node ###
 
 ```pseudocode
-int MODE(){
+bool MODE(){
   print a integer request message and return the integer given in input by the user
   
   if the input is 1
