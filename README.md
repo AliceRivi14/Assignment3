@@ -272,7 +272,7 @@ When the node is activated, the same message as for the MODE2 node is printed on
 The UI node represents the project’s user interface. This node constantly waits for an input from the user, who can ask which mode you want to run based on the robot’s behavior.
 
 
-This node has one function:
+This node has 1 function:
 
 * `bool MODE()`:
 
