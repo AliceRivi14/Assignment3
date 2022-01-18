@@ -176,7 +176,7 @@ int main (int argc, char **argv)
   int m;
 
   ros::Rate loop_rate(10);
-	while(ros::ok()){
+  while(ros::ok()){
     ros::param::get("/mode", m);
     // Mode 2 activated
     if(m == 2){
@@ -188,7 +188,7 @@ int main (int argc, char **argv)
      }
 
     ros::spinOnce();
-		loop_rate.sleep();
+    loop_rate.sleep();
   }
 
   return 0;
