@@ -2,8 +2,6 @@
 #include <actionlib/client/simple_action_client.h>
 #include "move_base_msgs/MoveBaseAction.h"
 
-
-
 int main (int argc, char **argv)
 {
   // Initializing the MODE1_node
@@ -47,14 +45,14 @@ int main (int argc, char **argv)
         std::cout << "Deleted position\n";
       }
     }
-    }
-    else{
-      loop_rate.sleep();
-      continue;
-    }
+   }
+   else{
+	loop_rate.sleep();
+	continue;
+   }
 
     ros::spinOnce();
-		loop_rate.sleep();
+    loop_rate.sleep();
   }
 
   return 0;
