@@ -1,6 +1,6 @@
-# Assignment3
+# Assignment 3
 
-Software architecture for the control of a mobile robot.
+Software architecture for the control of a mobile robot
 ================================
 
 This is software architecture for the control of the robot in the environment developed by [Student Robotics](https://studentrobotics.org) in ROS.
